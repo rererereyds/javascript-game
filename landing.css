@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+    display: flex;
+    position: relative;
+    height: 100vh;
+}
+
+.page1 {
+    width: 80vw;
+    height: 95vh;
+    margin: 1vh 10vw;
+    border: 1px solid black;
+    animation: anyKey 5s infinite;
+}
+
