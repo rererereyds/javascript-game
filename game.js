@@ -5,9 +5,6 @@ let isDead = false;
 canvas.width = 1500;
 canvas.height = 700;
 
-// canvas.width = 1500;
-// canvas.height = 710;
-
 let timeInterval = null;
 let score = 0;
 
@@ -21,7 +18,7 @@ class Player {
             x : 100,
             y : 100
         }
-        this.velocity = { //gravity of the player in 2D space; by default, it wil push the player down
+        this.velocity = {
             x: 0,
             y: 0
         }
@@ -58,11 +55,6 @@ class Player {
     draw() {
         c.drawImage(this.currentImage, this.position.x, this.position.y, this.width, this.height)
     }
-
-    // draw() { //style for player
-    //     c.fillStyle = "red";
-    //     c.fillRect(this.position.x,this.position.y, this.width, this.height);
-    // }
 
     update() {
         this.draw();
@@ -195,7 +187,7 @@ const keys = {
     }
 }
 
-let scrollOffset = 0; // setting the win scenario
+let scrollOffset = 0;
 
 function restart() {
     isDead = false;
@@ -292,7 +284,7 @@ function restart() {
             new Card({x: 11200, y: 200})
         ];
 
-    scrollOffset = 0; // setting the win scenario
+    scrollOffset = 0;
 }
 
 function animate() {
@@ -371,8 +363,6 @@ function animate() {
             }
         }
 
-        console.log (scrollOffset);
-
         //platform collision detector
         platforms.forEach(platform => {
             if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
@@ -437,37 +427,23 @@ restart();
 animate();
 startTimer();
 
-//Use below codes in order to identify the keyCode of your keys
-    /* addEventListener("keydown", (event) => { 
-        console.log(event);
-    }); */
-
-    //shortcut for the keycode finder
-    /*addEventListener("keydown", ({keyCode}) => { 
-        console.log(keyCode);
-    });*/
-
 //setting buttons function
 addEventListener("keydown", ({keyCode}) => { 
     switch (keyCode) {
         case 37:
-            console.log('left');
             keys.left.pressed = true;
             player.currentImage = player.images.run.left;
             break;
 
         case 40:
-            console.log('down');
             break;
         
         case 39:
-            console.log('right');
             keys.right.pressed = true;
             player.currentImage = player.images.run.right;
             break;
 
         case 38:
-            console.log('up');
             if (player.velocity.y == 0) {
                 let audio = new Audio('sound/jumpSound.mp3');
                 audio.play();
@@ -480,23 +456,19 @@ addEventListener("keydown", ({keyCode}) => {
 addEventListener("keyup", ({keyCode}) => { 
     switch (keyCode) {
         case 37:
-            console.log('left');
             keys.left.pressed = false;
             player.currentImage = player.images.stand.left;
             break;
 
         case 40:
-            console.log('down');
             break;
         
         case 39:
-            console.log('right');
             keys.right.pressed = false;
             player.currentImage = player.images.stand.right;
             break;
 
         case 38:
-            console.log('up');
             break;
     }
 });
@@ -525,7 +497,6 @@ function submitScore() {
         "name": name.value.toUpperCase(),
         "score": score
     });
-    console.log('added ' + name.value + ': ' + score);
     localStorage.setItem("gameScores", JSON.stringify(scores));
 
     name.value = "";
@@ -549,6 +520,5 @@ function getScores() {
     for (x = 0; x < scores.length; x++) {
         let scoreLi = document.createElement('p');
         let textVal = scores[x].name + ': ' + scores[x].score + ' PTS';
-        console.log(textVal);
     }
 }

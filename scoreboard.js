@@ -20,7 +20,6 @@ function getScores() {
     for (x = 0; x < scores.length; x++) {
         let scoreLi = document.createElement('li');
         let textVal = scores[x].name + ': ' + scores[x].score + ' PTS';
-        console.log(textVal);
         scoreLi.appendChild(document.createTextNode(textVal));
         scoreBoardUL.appendChild(scoreLi);
     }
