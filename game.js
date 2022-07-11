@@ -1,14 +1,17 @@
 const canvas = document.querySelector("canvas");
-const c = canvas.getContext('2d');
+let c = canvas.getContext('2d');
+let isDead = false;
 
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = 1500;
+canvas.height = 700;
+
+// canvas.width = 1500;
+// canvas.height = 710;
 
 let timeInterval = null;
 let score = 0;
 
-//creating player and gravity
-
+//creating player, gravity, and other images
 const gravity = 1.5;
 
 class Player {
@@ -46,8 +49,8 @@ class Player {
             }
         }
 
-        this.width = 50;
-        this.height = 60;
+        this.width = 90;
+        this.height = 100;
         this.currentImage = this.images.stand.right;
 
     }
@@ -65,7 +68,6 @@ class Player {
         this.draw();
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
-
         if (this.position.y + this.height + this.velocity.y <= canvas.height) { //this is for gravity condintion that character player will stop in canvas
             this.velocity.y += gravity;
         }
@@ -83,14 +85,13 @@ class Platform {
         image.src = "./img/platform.png";
 
         this.image = image;
-        this.width = image.width;
-        this.height = image.height;
+        this.width = 500;
+        this.height = 80;
     }
     
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y)
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
     }
-
 }
 
 class SmallPlatform {
@@ -104,12 +105,12 @@ class SmallPlatform {
         image.src = "./img/smallPlatform.png";
 
         this.image = image;
-        this.width = image.width;
-        this.height = image.height;
+        this.width = 200;
+        this.height = 80;
     }
     
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y)
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
     }
 
 }
@@ -122,7 +123,7 @@ class Circle {
         }
         
         const image = new Image ();
-        image.src = "./img/background.png";
+        image.src = "./img/circle.png";
 
         this.image = image;
         this.width = image.width;
@@ -135,16 +136,33 @@ class Circle {
 
 }
 
-class Card {
+class SakuraTree {
     constructor({x, y}) {
         this.position = {
             x,
             y
         }
         
-        // const image = document.createElement("img");
-        // image.setAttribute("class", "star");
-        // image.appendChild(canvas);
+        const image = new Image ();
+        image.src = "./img/sakuraTree.png";
+
+        this.image = image;
+        this.width = 800;
+        this.height = 760;
+    }
+    
+    draw() {
+        c.drawImage(this.image, this.position.x, this.position.y, this.width, this.height)
+    }
+
+}
+
+class Card {
+    constructor({x, y}) {
+        this.position = {
+            x,
+            y
+        }
 
         const image = new Image ();
         image.src = "./img/card.png";
@@ -165,6 +183,7 @@ let player = new Player();
 let platforms = [];
 let smallPlatforms = [];
 let circles = [];
+let sakuraTrees = [];
 let card = [];
 
 const keys = {
@@ -179,218 +198,256 @@ const keys = {
 let scrollOffset = 0; // setting the win scenario
 
 function restart() {
+    isDead = false;
+    
     player = new Player();
+
     platforms = 
         [
-            new Platform({x: -50, y: 520}),
-            new Platform({x: 170, y: 520}),
-            new Platform({x: 390, y: 520}),
-            new Platform({x: 610, y: 520}),
-            new Platform({x: 1000, y: 520}),
-            new Platform({x: 1220, y: 520}),
-            new Platform({x: 2220, y: 520}),
-            new Platform({x: 2700, y: 520}),
-            new Platform({x: 2920, y: 520}),
-            new Platform({x: 5000, y: 520}),
-            new Platform({x: 5220, y: 520}),
-            new Platform({x: 5440, y: 520}),
-            new Platform({x: 5440, y: 520}),
-            new Platform({x: 5660, y: 520}),
-            new Platform({x: 8200, y: 520}),
-            new Platform({x: 8550, y: 520}),
-            new Platform({x: 8900, y: 520}),
-            new Platform({x: 10800, y: 520}),
-            new Platform({x: 11020, y: 520}),
-            new Platform({x: 11240, y: 520}),
-            new Platform({x: 11460, y: 520}),
+            new Platform({x: 0, y: 620}),
+            new Platform({x: 495, y: 620}),
+            new Platform({x: 690, y: 620}),
+            new Platform({x: 1350, y: 620}),
+            new Platform({x: 3100, y: 620}),
+            new Platform({x: 3800, y: 620}),
+            new Platform({x: 5500, y: 620}),
+            new Platform({x: 5995, y: 620}),
+            new Platform({x: 6490, y: 620}),
+            new Platform({x: 6680, y: 620}),
         ];
+
     smallPlatforms = 
         [
-            new SmallPlatform({x: 1500, y: 450}),
-            new SmallPlatform({x: 1800, y: 350}),
-            new SmallPlatform({x: 2100, y: 250}),
-            new SmallPlatform({x: 2400, y: 150}),
-            new SmallPlatform({x: 3100, y: 400}),
-            new SmallPlatform({x: 3500, y: 300}),
-            new SmallPlatform({x: 3900, y: 300}),
-            new SmallPlatform({x: 4300, y: 300}),
-            new SmallPlatform({x: 4700, y: 200}),
-            new SmallPlatform({x: 5200, y: 200}),
-            new SmallPlatform({x: 5500, y: 300}),
-            new SmallPlatform({x: 5800, y: 200}),
-            new SmallPlatform({x: 6200, y: 200}),
-            new SmallPlatform({x: 6250, y: 450}),
-            new SmallPlatform({x: 6650, y: 450}),
-            new SmallPlatform({x: 6850, y: 350}),
-            new SmallPlatform({x: 7050, y: 250}),
-            new SmallPlatform({x: 7250, y: 150}),
-            new SmallPlatform({x: 7300, y: 450}),
-            new SmallPlatform({x: 7700, y: 350}),
-            new SmallPlatform({x: 8100, y: 300}),
-            new SmallPlatform({x: 9100, y: 400}),
-            new SmallPlatform({x: 9320, y: 300}),
-            new SmallPlatform({x: 9720, y: 300}),
-            new SmallPlatform({x: 10020, y: 200}),
-            new SmallPlatform({x: 10420, y: 200}),
-        ]
+            new SmallPlatform({x: 1800, y: 500}),
+            new SmallPlatform({x: 1950, y: 380}),
+            new SmallPlatform({x: 2100, y: 260}),
+            new SmallPlatform({x: 2500, y: 260}),
+            new SmallPlatform({x: 2900, y: 260}),
+            new SmallPlatform({x: 4200, y: 500}),
+            new SmallPlatform({x: 4400, y: 550}),
+            new SmallPlatform({x: 4600, y: 500}),
+            new SmallPlatform({x: 4800, y: 380}),
+            new SmallPlatform({x: 4800, y: 260}),
+            new SmallPlatform({x: 5100, y: 240}),
+            new SmallPlatform({x: 5700, y: 500}),
+            new SmallPlatform({x: 6000, y: 620}),
+            new SmallPlatform({x: 6050, y: 400}),
+            new SmallPlatform({x: 6400, y: 280}),
+            new SmallPlatform({x: 6800, y: 240}),
+            new SmallPlatform({x: 7200, y: 240}),
+            new SmallPlatform({x: 7600, y: 240}),
+            new SmallPlatform({x: 7550, y: 500}),
+            new SmallPlatform({x: 7600, y: 240}),
+            new SmallPlatform({x: 7700, y: 240}),
+            new SmallPlatform({x: 7900, y: 240}),
+            new SmallPlatform({x: 8300, y: 360}),
+            new SmallPlatform({x: 8650, y: 240}),
+            new SmallPlatform({x: 9050, y: 480}),
+            new SmallPlatform({x: 9450, y: 600}),
+            new SmallPlatform({x: 9800, y: 480}),
+            new SmallPlatform({x: 10150, y: 360}),
+            new SmallPlatform({x: 10220, y: 420}),
+            new SmallPlatform({x: 10680, y: 340}),
+            new SmallPlatform({x: 11080, y: 460}),
+            new SmallPlatform({x: 11220, y: 460}),
+        ];
+
     circles = 
         [
-            new Circle({x: -40, y: 120}),
-            new Circle({x: 320, y: -50}),
-            new Circle({x: 1000, y: 140}),
-            new Circle({x: 1800, y: -20}),
-            new Circle({x: 2100, y: 150}),
-            new Circle({x: 2900, y: 50}),
-            new Circle({x: 3700, y: 130}),
-            new Circle({x: 4000, y: -40}),
-            new Circle({x: 4300, y: 220}),
-            new Circle({x: 5100, y: -60}),
-            new Circle({x: 6000, y: 270}),
-            new Circle({x: 6200, y: -50}),
-            new Circle({x: 7200, y: 150}),
-            new Circle({x: 8300, y: -50}),
+            new Circle({x: -40, y: 250}),
+            new Circle({x: 400, y:  -40}),
+            new Circle({x: 1000, y:  200}),
+            new Circle({x: 1600, y:  400}),
+            new Circle({x: 2200, y:  -100}),
+            new Circle({x: 2600, y:  200}),
+            new Circle({x: 3300, y:  50}),
+            new Circle({x: 3800, y:  450}),
+            new Circle({x: 4400, y:  -20}),
+            new Circle({x: 4900, y:  500}),
+            new Circle({x: 5400, y:  310}),
+            new Circle({x: 6000, y:  10}),
+            new Circle({x: 6400, y:  430}),
+            new Circle({x: 6600, y:  -50}),
+            new Circle({x: 7050, y:  340}),
+            new Circle({x: 7900, y:  140}),
+            new Circle({x: 8800, y:  360}),
         ];
+
+    sakuraTrees = 
+        [
+            new SakuraTree({x: -100, y: -50}),
+            new SakuraTree({x: 400, y: -50}),
+            new SakuraTree({x: 1200, y: -50}),
+            new SakuraTree({x: 2700, y: -50}),
+            new SakuraTree({x: 4000, y: -50}),
+            new SakuraTree({x: 4800, y: -50}),
+            new SakuraTree({x: 5400, y: -50}),
+            new SakuraTree({x: 6000, y: -50}),
+            new SakuraTree({x: 7000, y: -50}),
+            new SakuraTree({x: 8300, y: -50}),
+        ];
+
     card = 
         [
-            new Card({x: 11200, y: 180})
+            new Card({x: 11200, y: 200})
         ];
 
     scrollOffset = 0; // setting the win scenario
 }
 
 function animate() {
-    requestAnimationFrame (animate);
-    c.fillStyle = "black";
-    c.fillRect(0, 0, canvas.width, canvas.height);
-
-    circles.forEach(circle => {
-        circle.draw();
-    })
-
-    card.forEach(card => {
-        card.draw();
-    })
-
-    smallPlatforms.forEach(smallPlatform => {
-        smallPlatform.draw();
-    })
-
-    platforms.forEach(platform => {
-        platform.draw();
-    })
-
-    player.update();
-
-    if (keys.right.pressed && player.position.x < 400) {
-        player.velocity.x = player.speed;
-    } else if ((keys.left.pressed && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)) {
-        player.velocity.x = -player.speed;
+    if(isDead){
+        c = null;
+        return;
     } else {
-        player.velocity.x = 0;
+        requestAnimationFrame (animate);
+        c.fillStyle = "skyblue";
+        c.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (keys.right.pressed) {
-            scrollOffset += player.speed;
-            platforms.forEach(platform => {
-                platform.position.x -= player.speed;
-            })
-            smallPlatforms.forEach(smallPlatform => {
-                smallPlatform.position.x -= player.speed;
-            })
-            card.forEach(card => {
-                card.position.x -= player.speed;
-            })
-            circles.forEach(circle => {
-                circle.position.x -= player.speed * 0.70;
-            })
-        } else if (keys.left.pressed && scrollOffset > 0) {
-            scrollOffset -= player.speed;
-            platforms.forEach(platform => {
-                platform.position.x += player.speed;
-            })
-            smallPlatforms.forEach(smallPlatform => {
-                smallPlatform.position.x += player.speed;
-            })
-            card.forEach(card => {
-                card.position.x += player.speed;
-            })
-            circles.forEach(circle => {
-                circle.position.x += player.speed * 0.70;
-            })
+        circles.forEach(circle => {
+            circle.draw();
+        })
+
+        sakuraTrees.forEach(sakuraTree => {
+            sakuraTree.draw();
+        })
+
+        card.forEach(card => {
+            card.draw();
+        })
+
+        smallPlatforms.forEach(smallPlatform => {
+            smallPlatform.draw();
+        })
+
+        platforms.forEach(platform => {
+            platform.draw();
+        })
+
+        player.update();
+
+        //setting speed for movement
+        if (keys.right.pressed && player.position.x < 400) {
+            player.velocity.x = player.speed;
+        } else if ((keys.left.pressed && player.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)) {
+            player.velocity.x = -player.speed;
+        } else {
+            player.velocity.x = 0;
+
+            if (keys.right.pressed) {
+                scrollOffset += player.speed;
+                card.forEach(card => {
+                    card.position.x -= player.speed;
+                })
+                platforms.forEach(platform => {
+                    platform.position.x -= player.speed;
+                })
+                smallPlatforms.forEach(smallPlatform => {
+                    smallPlatform.position.x -= player.speed;
+                })
+                circles.forEach(circle => {
+                    circle.position.x -= player.speed * 0.70;
+                })
+                sakuraTrees.forEach(sakuraTree => {
+                    sakuraTree.position.x -= player.speed * 0.70;
+                })
+            } else if (keys.left.pressed && scrollOffset > 0) {
+                scrollOffset -= player.speed;
+                platforms.forEach(platform => {
+                    platform.position.x += player.speed;
+                })
+                smallPlatforms.forEach(smallPlatform => {
+                    smallPlatform.position.x += player.speed;
+                })
+                card.forEach(card => {
+                    card.position.x += player.speed;
+                })
+                circles.forEach(circle => {
+                    circle.position.x += player.speed * 0.70;
+                })
+                sakuraTrees.forEach(sakuraTree => {
+                    sakuraTree.position.x += player.speed * 0.70;
+                })
+            }
+        }
+
+        console.log (scrollOffset);
+
+        //platform collision detector
+        platforms.forEach(platform => {
+            if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
+                player.velocity.y = 0
+            }
+
+        })
+
+        smallPlatforms.forEach(smallPlatform => {
+            if (player.position.y + player.height <= smallPlatform.position.y && player.position.y + player.height + player.velocity.y >= smallPlatform.position.y && player.position.x + player.width >= smallPlatform.position.x && player.position.x <= smallPlatform.position.x + smallPlatform.width) {
+                player.velocity.y = 0
+            }
+
+        })
+
+
+        //win condition
+        const congrats = document.querySelector(".congrats");
+        const overlay = document.querySelector(".overlay");
+        const openModal = function () {
+            congrats.classList.remove("hidden");
+            overlay.classList.remove("hidden");
+        };
+        const closeModal = function () {
+            congrats.classList.add("hidden");
+            overlay.classList.add("hidden");
+        };
+        if (scrollOffset >= 10750) {
+        // if (scrollOffset >= 100) {
+            isDead = true;
+            let audio = new Audio('sound/bgSong.mp3');
+            audio.play();
+            openModal();
+        } else {
+            closeModal ();
+        }
+
+
+        // lose condition
+        const gameOver = document.querySelector(".gameOver");
+        const overlayOver = document.querySelector(".overlayOver");
+        const openModalOver = function () {
+            gameOver.classList.remove("hidden");
+            overlayOver.classList.remove("hidden");
+        };
+        const closeModalOver = function () {
+            gameOver.classList.add("hidden");
+            overlayOver.classList.add("hidden");
+        };
+        if (player.position.y > canvas.height) {
+            isDead = true;
+            let audio = new Audio('sound/failSound.mp3');
+            audio.play();
+            // getScores();
+            openModalOver();
+        } else {
+            closeModalOver();
         }
     }
-
-    console.log (scrollOffset);
-
-    //platform collision detector
-    platforms.forEach(platform => {
-        if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
-            player.velocity.y = 0
-        }
-
-    })
-
-    smallPlatforms.forEach(smallPlatform => {
-        if (player.position.y + player.height <= smallPlatform.position.y && player.position.y + player.height + player.velocity.y >= smallPlatform.position.y && player.position.x + player.width >= smallPlatform.position.x && player.position.x <= smallPlatform.position.x + smallPlatform.width) {
-            player.velocity.y = 0
-        }
-
-    })
-
-
-    //win condition
-    const congrats = document.querySelector(".congrats");
-    const overlay = document.querySelector(".overlay");
-    const openModal = function () {
-        congrats.classList.remove("hidden");
-        overlay.classList.remove("hidden");
-    };
-    const closeModal = function () {
-        congrats.classList.add("hidden");
-        overlay.classList.add("hidden");
-    };
-    // if (scrollOffset >= 10750) { //can put here the last platform location
-    if (scrollOffset >= 10750) { //can put here the last platform location
-        // console.log ("you win");
-        openModal();
-    } else {
-        closeModal ();
-    }
-
-    // lose condition
-
-    const gameOver = document.querySelector(".gameOver");
-    const overlayOver = document.querySelector(".overlayOver");
-    const openModalOver = function () {
-        gameOver.classList.remove("hidden");
-        overlayOver.classList.remove("hidden");
-    };
-    const closeModalOver = function () {
-        gameOver.classList.add("hidden");
-        overlayOver.classList.add("hidden");
-    };
-    if (player.position.y > canvas.height) {
-        getScores();
-        openModalOver();
-    } else {
-        closeModalOver();
-    }
-
 }
 restart();
 animate();
 startTimer();
 
-//creating movements
-
 //Use below codes in order to identify the keyCode of your keys
-/* addEventListener("keydown", (event) => { 
-     console.log(event);
-}); */
+    /* addEventListener("keydown", (event) => { 
+        console.log(event);
+    }); */
 
-//shortcut for the keycode finder
-/*addEventListener("keydown", ({keyCode}) => { 
-    console.log(keyCode);
-});*/
+    //shortcut for the keycode finder
+    /*addEventListener("keydown", ({keyCode}) => { 
+        console.log(keyCode);
+    });*/
+
+//setting buttons function
 addEventListener("keydown", ({keyCode}) => { 
     switch (keyCode) {
         case 37:
@@ -412,6 +469,8 @@ addEventListener("keydown", ({keyCode}) => {
         case 38:
             console.log('up');
             if (player.velocity.y == 0) {
+                let audio = new Audio('sound/jumpSound.mp3');
+                audio.play();
                 player.velocity.y -= 20;
             }
             break;
@@ -442,6 +501,7 @@ addEventListener("keyup", ({keyCode}) => {
     }
 });
 
+//setting timer
 function startTimer() {
     if (score === 0) {
         timeInterval = setInterval(function() {
@@ -450,41 +510,45 @@ function startTimer() {
     }
 }
 
+// setting leaderboard
 function submitScore() {
-    const name = document.querySelector('.enterName');
-    let allScores = localStorage.getItem('gameScores');
+    const name = document.querySelector(".enterBox");
+    let allScores = localStorage.getItem("gameScores");
     let scores = [];
 
-    if (allScores != null && JSON.parse(allScores).length > 0) {
+    if (allScores != 'null' && JSON.parse(allScores).length > 0) {
         scores = JSON.parse(allScores);
     }
 
     scores.push({
-        'name': name.value,
-        'score': score
+        // "name": name.value,
+        "name": name.value.toUpperCase(),
+        "score": score
     });
-
-    localStorage.setItem('gameScores', JSON.stringify(scores));
+    console.log('added ' + name.value + ': ' + score);
+    localStorage.setItem("gameScores", JSON.stringify(scores));
 
     name.value = "";
     timeInterval = null;
     score = 0;
-    restart();
+    
+    // add calling landing page
+    setTimeout(function() {
+        window.location.replace('/landing.html');
+    }, 1000);
 }
 
 function resetScores() {
-    localStorage.setItem('gameScores', null);
+    localStorage.setItem("gameScores", null);
 }
 
-const scoresUlList = document.querySelector('.scores-ul');
+const scoresUlList = document.querySelector(".scores-ul");
 function getScores() {
-    const scores = JSON.parse(localStorage.getItem('gameScores'));
+    const scores = JSON.parse(localStorage.getItem("gameScores"));
     
     for (x = 0; x < scores.length; x++) {
         let scoreLi = document.createElement('p');
         let textVal = scores[x].name + ': ' + scores[x].score + ' PTS';
         console.log(textVal);
-        scoreLi.textContent = textVal;
-        scoresUlList.appendChild(scoreLi);
     }
 }

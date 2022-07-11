@@ -9,25 +9,44 @@
     <link rel="stylesheet" href="game.css"/>
 </head>
 <body>
-    <canvas></canvas>   
+    <canvas></canvas>
+
     <div class="congrats hidden">
-        <p class="congratsWord">Congrats!</p>
-        <label for="enterName">Enter your name here:</label>
-        <ul class="scores-ul">
-        </ul>
-        <br>
-        <input type="text" class="enterName" name="fname"><br>
-        <button class="submit-btn" onclick="submitScore()">Submit</button><br>
-        <button class="scores-btn" onclick="getScores()">Scores</button>
+        <p class="congratsWord">CONGRATS!</p>
+        <p class="helpWord">You've just helped Kero and Sakura summon the Flower Card!</p>
+        <p class="enterWord">You are qualified as a cardcaptor. Enter your name here:</p>
+        <input type="text" class="enterBox"><br>
+        <button class="submitButton" onclick="submitScore()">
+            <span class="submitWord">Submit</span>
+        </button>
+        <p class="seeScoresWord">See your name at the Score Board upon submission.</p>
+        <!-- <a href="scoreboard.html">
+            <button class="scoresButton">
+                <span class="scoreWord">Score Board</span>
+            </button>
+        </a> -->
+        <div class="winningImage">
+            <img src="/img/winningImage.webp" alt="Winning Image">
+        </div>
     </div>
     <div class="overlay hidden"></div>
+
     <div class="gameOver hidden">
-        <p class="gameOverWord">Game Over.</p>
-        <ul class="scores-ul">
-        </ul>
-        <br>
-        <button class="restart-btn" onclick="restart()">Restart Game.</button>
-        <button class="scores-btn" onclick="getScores()">Scores</button>
+        <p class="gameOverWord">GAME OVER.</p>
+        <p class="failedWord">Sorry. You've failed finding the Flower Card.</p>
+        <p class="restartWord">Want to restart the game? Click below.</p>
+        <button class="restartButton" onclick="location.reload()">
+            <span class="restartGameWord">Restart Game</span>
+        </button>
+        <p class="seeNamesWord">To see the names and scores of those who succesfully helped Kero and Sakura, click below.</p>
+        <a href="scoreboard.html">
+            <button class="scoresButton2">
+                <span class="scoreWord2">Score Board</span>
+            </button>
+        </a>
+        <div class="losingImage">
+            <img src="/img/losingImage.webp" alt="Losing Image">
+        </div>
     </div>
     <div class="overlayOver hidden"></div>
 
