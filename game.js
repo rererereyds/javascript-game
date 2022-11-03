@@ -505,7 +505,7 @@ function submitScore() {
     
     // add calling landing page
     setTimeout(function() {
-        window.location.replace('/landing.html');
+        window.location.replace('/index.html');
     }, 1000);
 }
 
